@@ -4,8 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import telran.view.InputOutput;
+import telran.view.Item;
 
-public class EmployeeReader {
+public class EmployeeItems {
     final static int MIN_SALARY = 5000;
     final static int MAX_SALARY = 30000;
     final static String[] DEPARTMENTS = { "QA", "Audit", "Development", "Management" };
@@ -22,25 +23,41 @@ public class EmployeeReader {
     final static long MIN_SALES = 0;
     final static long MAX_SALES = 1000000;
 
-    public static Employee readEmployee(InputOutput io) {
+    private static Company company;
+
+    public static Item[] getItems(Company company) {
+        EmployeeItems.company = company;
+
+        Item[] items = {
+                Item.of("Hire Employee", EmployeeItems::readEmployee),
+                Item.of("Hire Wage Employee", EmployeeItems::readWageEmployee),
+                Item.of("Hire Sales Person", EmployeeItems::readSalesPerson),
+                Item.of("Hire Manager", EmployeeItems::readManager),
+                Item.ofExit()
+        };
+
+        return items;
+    }
+
+    public static void readEmployee(InputOutput io) {
         long id = readId(io);
         int salary = readSalary(io);
         String department = readDepartment(io);
 
-        return new Employee(id, salary, department);
+        company.addEmployee(new Employee(id, salary, department));
     }
 
-    public static WageEmployee readWageEmployee(InputOutput io) {
+    public static void readWageEmployee(InputOutput io) {
         long id = readId(io);
         int salary = readSalary(io);
         String department = readDepartment(io);
         int wage = readWage(io);
         int hours = readHours(io);
 
-        return new WageEmployee(id, salary, department, wage, hours);
+        company.addEmployee(new WageEmployee(id, salary, department, wage, hours));
     }
 
-    public static SalesPerson readSalesPerson(InputOutput io) {
+    public static void readSalesPerson(InputOutput io) {
         long id = readId(io);
         int salary = readSalary(io);
         String department = readDepartment(io);
@@ -49,16 +66,16 @@ public class EmployeeReader {
         float percent = readPercent(io);
         long sales = readSales(io);
 
-        return new SalesPerson(id, salary, department, wage, hours, percent, sales);
+        company.addEmployee(new SalesPerson(id, salary, department, wage, hours, percent, sales));
     }
 
-    public static Manager readManager(InputOutput io) {
+    public static void readManager(InputOutput io) {
         long id = readId(io);
         int salary = readSalary(io);
         String department = readDepartment(io);
         float factor = readFactor(io);
-    
-        return new Manager(id, salary, department, factor);
+
+        company.addEmployee(new Manager(id, salary, department, factor));
     }
 
     private static long readId(InputOutput io) {
@@ -123,4 +140,5 @@ public class EmployeeReader {
                 MIN_SALES,
                 MAX_SALES).longValue();
     }
+
 }
