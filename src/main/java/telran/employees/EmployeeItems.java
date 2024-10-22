@@ -2,6 +2,8 @@ package telran.employees;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import telran.view.InputOutput;
 import telran.view.Item;
@@ -29,53 +31,57 @@ public class EmployeeItems {
         EmployeeItems.company = company;
 
         Item[] items = {
-                Item.of("Hire Employee", EmployeeItems::readEmployee),
-                Item.of("Hire Wage Employee", EmployeeItems::readWageEmployee),
-                Item.of("Hire Sales Person", EmployeeItems::readSalesPerson),
-                Item.of("Hire Manager", EmployeeItems::readManager),
+                Item.of("Hire Employee", EmployeeItems.addEmployee(EmployeeItems::enterEmployee)),
+                Item.of("Hire Wage Employee", EmployeeItems.addEmployee(EmployeeItems::enterWageEmployee)),
+                Item.of("Hire Sales Person", EmployeeItems.addEmployee(EmployeeItems::enterSalesPerson)),
+                Item.of("Hire Manager", EmployeeItems.addEmployee(EmployeeItems::enterManager)),
                 Item.ofExit()
         };
 
         return items;
     }
 
-    public static void readEmployee(InputOutput io) {
-        long id = readId(io);
-        int salary = readSalary(io);
-        String department = readDepartment(io);
-
-        company.addEmployee(new Employee(id, salary, department));
+    private static Consumer<InputOutput> addEmployee(Function<InputOutput, Employee> reader) {
+        return i -> company.addEmployee(reader.apply(i));
     }
 
-    public static void readWageEmployee(InputOutput io) {
-        long id = readId(io);
-        int salary = readSalary(io);
-        String department = readDepartment(io);
-        int wage = readWage(io);
-        int hours = readHours(io);
-
-        company.addEmployee(new WageEmployee(id, salary, department, wage, hours));
+    public static Employee enterEmployee(InputOutput io) {
+        return new Employee(
+            readId(io),
+            readSalary(io),
+            readDepartment(io)
+        );
     }
 
-    public static void readSalesPerson(InputOutput io) {
-        long id = readId(io);
-        int salary = readSalary(io);
-        String department = readDepartment(io);
-        int wage = readWage(io);
-        int hours = readHours(io);
-        float percent = readPercent(io);
-        long sales = readSales(io);
-
-        company.addEmployee(new SalesPerson(id, salary, department, wage, hours, percent, sales));
+    public static WageEmployee enterWageEmployee(InputOutput io) {
+        return new WageEmployee(
+            readId(io),
+            readSalary(io),
+            readDepartment(io),
+            readWage(io),
+            readHours(io)
+        );
     }
 
-    public static void readManager(InputOutput io) {
-        long id = readId(io);
-        int salary = readSalary(io);
-        String department = readDepartment(io);
-        float factor = readFactor(io);
+    public static SalesPerson enterSalesPerson(InputOutput io) {
+        return new SalesPerson(
+            readId(io),
+            readSalary(io),
+            readDepartment(io),
+            readWage(io),
+            readHours(io),
+            readPercent(io),
+            readSales(io)
+        );
+    }
 
-        company.addEmployee(new Manager(id, salary, department, factor));
+    public static Manager enterManager(InputOutput io) {
+        return new Manager(
+            readId(io),
+            readSalary(io),
+            readDepartment(io),
+            readFactor(io)
+        );
     }
 
     private static long readId(InputOutput io) {

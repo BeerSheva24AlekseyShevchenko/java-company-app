@@ -36,12 +36,8 @@ public class CompanyItems {
 
     private static void fireEmployee(InputOutput io) {
         long id = io.readLong("Enter ID:", null);
-        try {
-            company.removeEmployee(id);
-            io.writeLine("Employee fired");
-        } catch (Exception e) {
-            io.writeLine("Employee not found");
-        }
+        company.removeEmployee(id);
+        io.writeLine("Employee fired");
     }
 
     private static void displayDepartmentSalaryBudget(InputOutput io) {
