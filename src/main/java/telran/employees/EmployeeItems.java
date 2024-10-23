@@ -54,32 +54,35 @@ public class EmployeeItems {
     }
 
     public static WageEmployee enterWageEmployee(InputOutput io) {
+        Employee empl = enterEmployee(io);
         return new WageEmployee(
-            readId(io),
-            readSalary(io),
-            readDepartment(io),
+            empl.getId(),
+            empl.getSalary(),
+            empl.getDepartment(),
             readWage(io),
             readHours(io)
         );
     }
 
     public static SalesPerson enterSalesPerson(InputOutput io) {
+        WageEmployee empl = enterWageEmployee(io);
         return new SalesPerson(
-            readId(io),
-            readSalary(io),
-            readDepartment(io),
-            readWage(io),
-            readHours(io),
+            empl.getId(),
+            empl.getSalary(),
+            empl.getDepartment(),
+            empl.getWage(),
+            empl.getHours(),
             readPercent(io),
             readSales(io)
         );
     }
 
     public static Manager enterManager(InputOutput io) {
+        Employee empl = enterEmployee(io);
         return new Manager(
-            readId(io),
-            readSalary(io),
-            readDepartment(io),
+            empl.getId(),
+            empl.getSalary(),
+            empl.getDepartment(),
             readFactor(io)
         );
     }
